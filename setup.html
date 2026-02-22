@@ -1,0 +1,281 @@
+<!--
+【快速图片配置工具】
+使用方法：
+1. 将此文件另存为 setup.html 到 zhenhuantest 文件夹
+2. 在浏览器中打开 http://localhost:8888/setup.html
+3. 输入4张图片的URL
+4. 点击生成配置代码
+5. 复制生成的代码，粘贴到 index.html 的 characters 变量中
+
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>甄嬛测试 - 图片配置工具</title>
+    <style>
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(180deg, #faf8f6 0%, #f5ede5 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            color: #c2185b;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #999;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #f0ebe5;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #d81b60;
+            box-shadow: 0 0 8px rgba(216, 27, 96, 0.2);
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 6px;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .character-group {
+            background: #f9f8f7;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #d81b60;
+        }
+
+        .character-group h3 {
+            color: #c2185b;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-generate {
+            background: linear-gradient(135deg, #c2185b, #d81b60);
+            color: white;
+            box-shadow: 0 4px 16px rgba(194, 24, 91, 0.3);
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(194, 24, 91, 0.35);
+        }
+
+        .btn-copy {
+            background: white;
+            color: #d81b60;
+            border: 2px solid #d81b60;
+        }
+
+        .btn-copy:hover {
+            background: #fef5f8;
+        }
+
+        .output-section {
+            display: none;
+            margin-top: 30px;
+            background: #faf8f7;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px dashed #d81b60;
+        }
+
+        .output-section.show {
+            display: block;
+        }
+
+        .output-section h3 {
+            color: #c2185b;
+            margin-bottom: 12px;
+        }
+
+        .code-output {
+            background: #333;
+            color: #0f0;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .tip {
+            background: #fef5f8;
+            border-left: 4px solid #d81b60;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 甄嬛测试 - 图片配置工具</h1>
+        <p class="subtitle">快速配置4个角色的美图URL</p>
+
+        <div class="character-group">
+            <h3>👑 甄嬛 - 聪慧优雅 · 命运掌控者</h3>
+            <div class="form-group">
+                <label>图片URL</label>
+                <input type="text" id="zhenHuanImg" placeholder="粘贴甄嬛的美图链接...">
+                <small>示例：./images/zhenhuang.jpg 或 https://example.com/zhenhuang.jpg</small>
+            </div>
+        </div>
+
+        <div class="character-group">
+            <h3>💎 华妃 - 傲气十足 · 自我主宰者</h3>
+            <div class="form-group">
+                <label>图片URL</label>
+                <input type="text" id="huaFeiImg" placeholder="粘贴华妃的美图链接...">
+                <small>示例：./images/huafei.jpg 或 https://example.com/huafei.jpg</small>
+            </div>
+        </div>
+
+        <div class="character-group">
+            <h3>👸 皇后 - 端庄睿智 · 权谋大师</h3>
+            <div class="form-group">
+                <label>图片URL</label>
+                <input type="text" id="huangHouImg" placeholder="粘贴皇后的美图链接...">
+                <small>示例：./images/huanghou.jpg 或 https://example.com/huanghou.jpg</small>
+            </div>
+        </div>
+
+        <div class="character-group">
+            <h3>🌸 沈眉庄 - 温暖善良 · 治愈使者</h3>
+            <div class="form-group">
+                <label>图片URL</label>
+                <input type="text" id="shenMeiZhuangImg" placeholder="粘贴沈眉庄的美图链接...">
+                <small>示例：./images/shenmeizhang.jpg 或 https://example.com/shenmeizhang.jpg</small>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-generate" onclick="generateCode()">🔧 生成配置代码</button>
+        </div>
+
+        <div class="output-section" id="outputSection">
+            <h3>✨ 配置代码（复制下面的代码）</h3>
+            <div class="code-output" id="codeOutput"></div>
+            <button class="btn-copy" onclick="copyToClipboard()">📋 复制代码</button>
+            <div class="tip">
+                ✨ 提示：复制此代码后，在 index.html 中找到 <strong>const characters = {</strong>，将整个 characters 对象替换为此代码。
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateCode() {
+            const zhenHuanImg = document.getElementById('zhenHuanImg').value.trim();
+            const huaFeiImg = document.getElementById('huaFeiImg').value.trim();
+            const huangHouImg = document.getElementById('huangHouImg').value.trim();
+            const shenMeiZhuangImg = document.getElementById('shenMeiZhuangImg').value.trim();
+
+            if (!zhenHuanImg || !huaFeiImg || !huangHouImg || !shenMeiZhuangImg) {
+                alert('请填写所有4个角色的图片URL');
+                return;
+            }
+
+            const code = `const characters = {
+    zhenHuan: {
+        name: "甄嬛",
+        title: "聪慧优雅 · 命运掌控者",
+        image: "${zhenHuanImg}",
+        description: "聪慧优雅的你，就像甄嬛一样。内心坚强，外表温柔，懂得隐忍与坚持。你用智慧和善良改变命运，即使经历伤害也能重生。你是众人的知心人，更是命运的掌控者。"
+    },
+    huaFei: {
+        name: "华妃",
+        title: "傲气十足 · 自我主宰者",
+        image: "${huaFeiImg}",
+        description: "傲气十足的你，正如华妃一般。性格直率，气场强大，不屑于低眉顺眼。你爱恨分明，坚持自我，即使孤独也绝不妥协。你是自己人生的绝对主角。"
+    },
+    huangHou: {
+        name: "皇后",
+        title: "端庄睿智 · 权谋大师",
+        image: "${huangHouImg}",
+        description: "端庄睿智的你，尽得皇后之风范。理性克制，思想深远，总能看透人心。你游刃有余地处理复杂局面，用智谋而非蛮力赢得尊重。你是理性与权谋的完美化身。"
+    },
+    shenMeiZhuang: {
+        name: "沈眉庄",
+        title: "温暖善良 · 治愈使者",
+        image: "${shenMeiZhuangImg}",
+        description: "温暖善良的你，就像沈眉庄一般。心地纯良，充满同情，是朋友的知心人。你虽然温柔，但有坚守的底线。你用真诚和包容去感染身边的每一个人。"
+    }
+};`;
+
+            document.getElementById('codeOutput').textContent = code;
+            document.getElementById('outputSection').classList.add('show');
+        }
+
+        function copyToClipboard() {
+            const code = document.getElementById('codeOutput').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('✨ 代码已复制到剪贴板！\n\n接下来：\n1. 打开 index.html\n2. 找到第 542 行附近的 const characters = {\n3. 粘贴新代码替换');
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>穿越甄嬛传，你是何人？</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(180deg, #faf8f6 0%, #f5ede5 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .container {
+            max-width: 480px;
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #c2185b 0%, #d81b60 50%, #ec407a 100%);
+            color: white;
+            padding: 40px 24px 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="15" fill="white" opacity="0.08"/><circle cx="80" cy="80" r="20" fill="white" opacity="0.1"/></svg>');
+            opacity: 0.5;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 13px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+            font-weight: 400;
+        }
+
+        .content {
+            padding: 32px 24px;
+            min-height: 300px;
+        }
+
+        .start-section {
+            text-align: center;
+        }
+
+        .start-section .emoji {
+            font-size: 56px;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .start-section p {
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 16px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .start-section p:last-of-type {
+            color: #999;
+            font-size: 13px;
+            font-weight: 400;
+            margin-bottom: 24px;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #c2185b 0%, #d81b60 100%);
+            color: white;
+            border: none;
+            padding: 14px 48px;
+            border-radius: 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 16px rgba(194, 24, 91, 0.3);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(194, 24, 91, 0.4);
+        }
+
+        .start-btn:active {
+            transform: scale(0.97);
+        }
+
+        .question-section {
+            display: none;
+        }
+
+        .question-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-counter {
+            font-size: 12px;
+            color: #d81b60;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .progress-bar {
+            background: #f0f0f0;
+            height: 4px;
+            border-radius: 2px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #c2185b, #d81b60);
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .question-text {
+            font-size: 18px;
+            color: #222;
+            margin-bottom: 20px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            background: #f9f8f7;
+            border: 2px solid #f0ebe5;
+            padding: 14px 16px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 15px;
+            color: #333;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .option:hover {
+            border-color: #d81b60;
+            background: #fef5f8;
+            transform: translateX(4px);
+        }
+
+        .option.selected {
+            background: linear-gradient(135deg, rgba(216, 27, 96, 0.08), rgba(236, 64, 122, 0.08));
+            border-color: #d81b60;
+            color: #c2185b;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(216, 27, 96, 0.12);
+        }
+
+        .option.selected::after {
+            content: '✓';
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #d81b60;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, #c2185b 0%, #d81b60 100%);
+            color: white;
+            border: none;
+            padding: 13px 32px;
+            border-radius: 24px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 24px;
+            width: 100%;
+            transition: all 0.3s ease;
+            opacity: 0.4;
+            cursor: not-allowed;
+            box-shadow: 0 2px 8px rgba(194, 24, 91, 0.2);
+        }
+
+        .next-btn.enabled {
+            opacity: 1;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(194, 24, 91, 0.3);
+        }
+
+        .next-btn:hover.enabled {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(194, 24, 91, 0.35);
+        }
+
+        .next-btn:active.enabled {
+            transform: scale(0.98);
+        }
+
+        .result-section {
+            display: none;
+            text-align: center;
+            animation: resultShow 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .result-section.active {
+            display: block;
+        }
+
+        @keyframes resultShow {
+            from {
+                opacity: 0;
+                transform: scale(0.92);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .result-image-container {
+            position: relative;
+            margin-bottom: 24px;
+            border-radius: 16px;
+            overflow: hidden;
+            aspect-ratio: 3/4;
+        }
+
+        .result-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .result-image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 100%);
+            border-radius: 16px;
+        }
+
+        .result-name {
+            font-size: 36px;
+            color: #c2185b;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .result-title {
+            font-size: 13px;
+            color: #d81b60;
+            margin-bottom: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .result-desc {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 28px;
+            background: #faf8f7;
+            padding: 16px 12px;
+            border-radius: 12px;
+            border-left: 3px solid #d81b60;
+        }
+
+        .share-btn {
+            background: white;
+            color: #d81b60;
+            border: 2px solid #d81b60;
+            padding: 12px 28px;
+            border-radius: 22px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .share-btn:hover {
+            background: #fef5f8;
+            transform: translateY(-2px);
+        }
+
+        .retry-btn {
+            background: linear-gradient(135deg, #c2185b 0%, #d81b60 100%);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 22px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(194, 24, 91, 0.2);
+        }
+
+        .retry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(194, 24, 91, 0.3);
+        }
+
+        .btn-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .confetti {
+            position: fixed;
+            pointer-events: none;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .header p {
+                font-size: 12px;
+            }
+
+            .content {
+                padding: 24px 16px;
+            }
+
+            .result-name {
+                font-size: 32px;
+            }
+
+            .result-desc {
+                font-size: 13px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .share-btn, .retry-btn {
+                width: 100%;
+            }
+
+            .question-text {
+                font-size: 16px;
+            }
+
+            .option {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✨ 穿越甄嬛传 ✨</h1>
+            <p>你是何人？</p>
+        </div>
+
+        <div class="content">
+            <!-- 开始页面 -->
+            <div class="start-section" id="startSection">
+                <div class="emoji">👑</div>
+                <p>通过5道趣味题目，发现你在甄嬛传中的角色身份</p>
+                <p style="font-size: 13px; color: #999;">根据你的性格和选择，找到最匹配的女性角色</p>
+                <button class="start-btn" onclick="startTest()">开始测验</button>
+            </div>
+
+            <!-- 测试页面 -->
+            <div class="question-section" id="questionSection">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="question-text" id="questionText"></div>
+                <div class="options" id="optionsContainer"></div>
+                <button class="next-btn" id="nextBtn" onclick="nextQuestion()">下一题</button>
+            </div>
+
+            <!-- 结果页面 -->
+            <div class="result-section" id="resultSection">
+                <div class="result-image-container">
+                    <img id="resultImage" class="result-image" src="" alt="角色">
+                    <div class="result-image-overlay"></div>
+                </div>
+                <div class="result-name" id="resultName"></div>
+                <div class="result-title" id="resultTitle"></div>
+                <div class="result-desc" id="resultDesc"></div>
+                <div class="btn-group">
+                    <button class="share-btn" onclick="shareResult()">📱 分享结果</button>
+                    <button class="retry-btn" onclick="restartTest()">再测一次</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 题目数据
+        const questions = [
+            {
+                text: "你觉得自己是什么样的人？",
+                options: [
+                    { text: "聪慧优雅，温柔贤淑", character: "甄嬛", score: { zhenHuan: 20 } },
+                    { text: "高冷傲气，气场强大", character: "华妃", score: { huaFei: 20 } },
+                    { text: "端庄大气，充满威严", character: "皇后", score: { huangHou: 20 } },
+                    { text: "温暖阳光，热情直爽", character: "沈眉庄", score: { shenMeiZhuang: 20 } }
+                ]
+            },
+            {
+                text: "面对工作压力，你通常：",
+                options: [
+                    { text: "深呼吸，冷静分析，制定策略", character: "甄嬛", score: { zhenHuan: 20, huangHou: 10 } },
+                    { text: "直接发泄，快速解决，不留退路", character: "华妃", score: { huaFei: 20 } },
+                    { text: "沉着冷静，权衡利弊，稳重应对", character: "皇后", score: { huangHou: 20 } },
+                    { text: "寻求朋友支持，抱怨发泄，一起解决", character: "沈眉庄", score: { shenMeiZhuang: 20 } }
+                ]
+            },
+            {
+                text: "你最欣赏别人身上的什么品质？",
+                options: [
+                    { text: "善良真诚，有同情心", character: "甄嬛", score: { zhenHuan: 20, shenMeiZhuang: 10 } },
+                    { text: "强势独立，不怕失败", character: "华妃", score: { huaFei: 20 } },
+                    { text: "理智睿智，洞察人心", character: "皇后", score: { huangHou: 20 } },
+                    { text: "温柔体贴，充满包容", character: "沈眉庄", score: { shenMeiZhuang: 20 } }
+                ]
+            },
+            {
+                text: "在感情中，你倾向于：",
+                options: [
+                    { text: "深情专一，为爱不顾一切", character: "甄嬛", score: { zhenHuan: 20 } },
+                    { text: "独立自主，不怕孤独", character: "华妃", score: { huaFei: 20 } },
+                    { text: "理性克制，维护自我", character: "皇后", score: { huangHou: 20 } },
+                    { text: "真诚陪伴，珍惜眼前人", character: "沈眉庄", score: { shenMeiZhuang: 20 } }
+                ]
+            },
+            {
+                text: "被背叛或伤害时，你会：",
+                options: [
+                    { text: "内心痛苦但隐忍，寻求改变", character: "甄嬛", score: { zhenHuan: 20 } },
+                    { text: "愤怒报复，绝不善罢甘休", character: "华妃", score: { huaFei: 20 } },
+                    { text: "冷静观察，暗中筹谋", character: "皇后", score: { huangHou: 20 } },
+                    { text: "难过但放下，相信善良", character: "沈眉庄", score: { shenMeiZhuang: 20 } }
+                ]
+            }
+        ];
+
+        // 角色数据
+        const characters = {
+            zhenHuan: {
+                name: "甄嬛",
+                title: "聪慧优雅 · 命运掌控者",
+                image: "./images/甄嬛.jpeg",
+                description: "聪慧优雅的你，就像甄嬛一样。内心坚强，外表温柔，懂得隐忍与坚持。你用智慧和善良改变命运，即使经历伤害也能重生。你是众人的知心人，更是命运的掌控者。"
+            },
+            huaFei: {
+                name: "华妃",
+                title: "傲气十足 · 自我主宰者",
+                image: "./images/华妃.jpg",
+                description: "傲气十足的你，正如华妃一般。性格直率，气场强大，不屑于低眉顺眼。你爱恨分明，坚持自我，即使孤独也绝不妥协。你是自己人生的绝对主角。"
+            },
+            huangHou: {
+                name: "皇后",
+                title: "端庄睿智 · 权谋大师",
+                image: "./images/皇后.jpg",
+                description: "端庄睿智的你，尽得皇后之风范。理性克制，思想深远，总能看透人心。你游刃有余地处理复杂局面，用智谋而非蛮力赢得尊重。你是理性与权谋的完美化身。"
+            },
+            shenMeiZhuang: {
+                name: "沈眉庄",
+                title: "温暖善良 · 治愈使者",
+                image: "./images/眉庄.png",
+                description: "温暖善良的你，就像沈眉庄一般。心地纯良，充满同情，是朋友的知心人。你虽然温柔，但有坚守的底线。你用真诚和包容去感染身边的每一个人。"
+            }
+        };
+
+        let currentQuestion = 0;
+        let scores = {
+            zhenHuan: 0,
+            huaFei: 0,
+            huangHou: 0,
+            shenMeiZhuang: 0
+        };
+        let selectedAnswer = null;
+
+        function startTest() {
+            document.getElementById('startSection').style.display = 'none';
+            document.getElementById('questionSection').classList.add('active');
+            showQuestion(0);
+        }
+
+        function showQuestion(index) {
+            currentQuestion = index;
+            selectedAnswer = null;
+
+            const question = questions[index];
+            document.getElementById('questionText').textContent = question.text;
+
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+
+            question.options.forEach((option, optionIndex) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.textContent = option.text;
+                optionDiv.onclick = () => selectOption(optionIndex, option);
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            // 更新进度条
+            const progress = ((index + 1) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+
+            // 重置下一步按钮
+            document.getElementById('nextBtn').classList.remove('enabled');
+            document.getElementById('nextBtn').textContent = index === questions.length - 1 ? '查看结果' : '下一题';
+        }
+
+        function selectOption(optionIndex, option) {
+            selectedAnswer = optionIndex;
+
+            // 更新UI
+            const options = document.querySelectorAll('.option');
+            options.forEach((opt, idx) => {
+                if (idx === optionIndex) {
+                    opt.classList.add('selected');
+                } else {
+                    opt.classList.remove('selected');
+                }
+            });
+
+            // 启用下一步按钮
+            document.getElementById('nextBtn').classList.add('enabled');
+
+            // 更新分数
+            Object.keys(option.score).forEach(character => {
+                scores[character] += option.score[character];
+            });
+        }
+
+        function nextQuestion() {
+            if (selectedAnswer === null) return;
+
+            if (currentQuestion < questions.length - 1) {
+                showQuestion(currentQuestion + 1);
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            // 找出最高分的角色
+            let maxScore = 0;
+            let resultCharacter = '';
+
+            Object.keys(scores).forEach(character => {
+                if (scores[character] > maxScore) {
+                    maxScore = scores[character];
+                    resultCharacter = character;
+                }
+            });
+
+            const result = characters[resultCharacter];
+
+            // 隐藏测试页面，显示结果页面
+            document.getElementById('questionSection').classList.remove('active');
+            document.getElementById('resultSection').classList.add('active');
+
+            // 填充结果内容
+            document.getElementById('resultImage').src = result.image;
+            document.getElementById('resultName').textContent = result.name;
+            document.getElementById('resultTitle').textContent = result.title;
+            document.getElementById('resultDesc').textContent = result.description;
+
+            // 播放彩纸效果
+            createConfetti();
+        }
+
+        function shareResult() {
+            const resultName = document.getElementById('resultName').textContent;
+            const text = `我在"甄嬛传角色测试"中是${resultName}！你呢？来测测你的甄嬛传身份吧～`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: '甄嬛传角色测试',
+                    text: text,
+                    url: window.location.href
+                }).catch(err => console.log('分享失败', err));
+            } else {
+                // 复制到剪贴板
+                const fullText = `${text}\n${window.location.href}`;
+                navigator.clipboard.writeText(fullText).then(() => {
+                    alert('已复制到剪贴板，快去分享吧！');
+                });
+            }
+        }
+
+        function restartTest() {
+            // 重置数据
+            currentQuestion = 0;
+            scores = {
+                zhenHuan: 0,
+                huaFei: 0,
+                huangHou: 0,
+                shenMeiZhuang: 0
+            };
+            selectedAnswer = null;
+
+            // 重置UI
+            document.getElementById('resultSection').classList.remove('active');
+            document.getElementById('startSection').style.display = 'block';
+
+            // 移除彩纸
+            document.querySelectorAll('.confetti').forEach(el => el.remove());
+        }
+
+        function createConfetti() {
+            const confettiPieces = 50;
+            const colors = ['#d946a6', '#f97316', '#fbbf24', '#f87171', '#a78bfa'];
+
+            for (let i = 0; i < confettiPieces; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.top = '-10px';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = '50%';
+                confetti.style.opacity = '0.8';
+
+                document.body.appendChild(confetti);
+
+                const duration = Math.random() * 2 + 2;
+                const xMove = Math.random() * 200 - 100;
+
+                confetti.animate([
+                    { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
+                    { transform: `translate(${xMove}px, ${window.innerHeight}px) rotate(720deg)`, opacity: 0 }
+                ], {
+                    duration: duration * 1000,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                });
+
+                setTimeout(() => confetti.remove(), duration * 1000);
+            }
+        }
+    </script>
+</body>
+</html>
